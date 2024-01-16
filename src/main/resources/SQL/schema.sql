@@ -1,11 +1,11 @@
 CREATE DATABASE IF NOT EXISTS todo;
 USE todo;
 
-CREATE TABLE task (
+CREATE TABLE IF NOT EXISTS task (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
-    userId VARCHAR(255) NOT NULL ,
-    isCompleted BOOLEAN NOT NULL,
+    user_id VARCHAR(255) NOT NULL ,
+    is_completed BOOLEAN NOT NULL,
     deadline DATETIME NOT NULL,
     completed_at DATETIME NULL
 );
