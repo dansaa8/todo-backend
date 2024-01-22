@@ -11,3 +11,5 @@ VALUES (3, 'Clean the kitchen', 2, false, '2023-03-03 15:30:00', null);
 
 INSERT INTO task(id, name, user_id, is_completed, deadline, completed_at)
 VALUES (4, 'Apply for a job', 2, true, '2023-02-26 16:00:00', '2023-02-26 09:00:00');
+
+-- INSERT INTO user()
