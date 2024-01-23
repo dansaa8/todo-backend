@@ -1,6 +1,7 @@
 package com.example.todobackend.task;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,6 +16,12 @@ public class TaskService {
 
     public List<TaskView> getAllTasks() {
         return taskRepository.findAllBy();
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        var taskEntity = taskRepository.findById(id).orElseThrow();
+        taskRepository.delete(taskEntity);
     }
 
 //    public List<TaskView> getUserTasks(String userId) throws AccessDeniedException {

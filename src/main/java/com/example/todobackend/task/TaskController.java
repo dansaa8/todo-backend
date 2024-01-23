@@ -1,10 +1,7 @@
 package com.example.todobackend.task;
 
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,6 +21,11 @@ public class TaskController {
     @GetMapping("/tasks")
     public List<TaskView> getAllTasks() {
         return taskService.getAllTasks();
+    }
+
+    @DeleteMapping("/tasks/{id}")
+    public void deleteTask(@PathVariable Long id) {
+        taskService.delete(id);
     }
 
 //    @GetMapping("/users/{userId}/tasks")
