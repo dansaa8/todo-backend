@@ -19,9 +19,22 @@ public class TaskService {
     }
 
     @Transactional
-    public void delete(Long id) {
+    public TaskDto delete(Long id) {
         var taskEntity = taskRepository.findById(id).orElseThrow();
         taskRepository.delete(taskEntity);
+        return new TaskDto(taskEntity);
+
+    }
+
+    public TaskDto add(TaskRequestBody requestBody) {
+        var taskEntity = new Task();
+        taskEntity.setName(requestBody.name());
+        taskEntity.setCompleted(false);
+        taskEntity.setDeadline(requestBody.deadline());
+        taskEntity.setUserId(1L); //temporary until auth has been implemented.
+        taskEntity.setCompletedAt(null);
+        taskRepository.save(taskEntity);
+        return new TaskDto(taskEntity);
     }
 
 //    public List<TaskView> getUserTasks(String userId) throws AccessDeniedException {

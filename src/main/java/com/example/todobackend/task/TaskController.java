@@ -1,5 +1,6 @@
 package com.example.todobackend.task;
 
+import jakarta.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,9 +24,14 @@ public class TaskController {
         return taskService.getAllTasks();
     }
 
+    @PostMapping("/tasks")
+    public TaskDto addTask(@RequestBody @Valid TaskRequestBody requestBody) {
+        return taskService.add(requestBody);
+    }
+
     @DeleteMapping("/tasks/{id}")
-    public void deleteTask(@PathVariable Long id) {
-        taskService.delete(id);
+    public TaskDto deleteTask(@PathVariable Long id) {
+        return taskService.delete(id);
     }
 
 //    @GetMapping("/users/{userId}/tasks")

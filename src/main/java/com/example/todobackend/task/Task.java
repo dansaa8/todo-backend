@@ -30,7 +30,6 @@ public class Task {
     @Column(name = "completed_at")
     private LocalDateTime completedAt;
 
-    @Size(max = 255)
     @Column(name = "user_id", nullable = false)
-    private String userId;
+    private Long userId;
 }
