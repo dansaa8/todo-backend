@@ -26,15 +26,27 @@ public class TaskService {
 
     }
 
-    public TaskDto add(TaskRequestBody requestBody) {
+    public TaskDto add(TaskRequestBody reqBody) {
         var taskEntity = new Task();
-        taskEntity.setName(requestBody.name());
+        taskEntity.setName(reqBody.name());
         taskEntity.setCompleted(false);
-        taskEntity.setDeadline(requestBody.deadline());
+        taskEntity.setDeadline(reqBody.deadline());
         taskEntity.setUserId(1L); //temporary until auth has been implemented.
         taskEntity.setCompletedAt(null);
         taskRepository.save(taskEntity);
         return new TaskDto(taskEntity);
+    }
+
+    public TaskDto update(Long id, TaskRequestBody reqBody) {
+        var taskEntity = taskRepository.findById(id).orElseThrow();
+        taskEntity.setName(reqBody.name());
+        taskEntity.setCompleted(false);
+        taskEntity.setDeadline(reqBody.deadline());
+        taskEntity.setUserId(1L); //temporary until auth has been implemented.
+        taskEntity.setCompletedAt(null);
+        taskRepository.save(taskEntity);
+        return new TaskDto(taskEntity);
+
     }
 
 //    public List<TaskView> getUserTasks(String userId) throws AccessDeniedException {

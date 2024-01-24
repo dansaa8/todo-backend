@@ -34,6 +34,12 @@ public class TaskController {
         return taskService.delete(id);
     }
 
+    @PutMapping("/tasks/{id}")
+    public TaskDto updateTask(
+            @PathVariable Long id,
+            @RequestBody @Valid TaskRequestBody requestBody) {
+        return taskService.update(id, requestBody); }
+
 //    @GetMapping("/users/{userId}/tasks")
 //    public List<TaskView> getUserTasks(@PathVariable String userId) throws AccessDeniedException {
 //        return taskService.getUserTasks(userId);
