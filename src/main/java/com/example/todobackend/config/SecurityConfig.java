@@ -68,15 +68,6 @@ public class SecurityConfig {
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling((exceptionHandling) ->
                         exceptionHandling.authenticationEntryPoint(exceptionHandler));
-//        return http
-//                .httpBasic(Customizer.withDefaults())
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .cors(AbstractHttpConfigurer::disable)
-//                .headers(AbstractHttpConfigurer::disable)
-//                .sessionManagement(ma -> ma.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .authorizeHttpRequests(authorize -> authorize
-//                        .requestMatchers(HttpMethod.GET, "/api/users/**").authenticated()
-//                        .anyRequest().denyAll())
         return http.build();
     }
 
