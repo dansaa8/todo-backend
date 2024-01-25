@@ -1,5 +1,6 @@
 package com.example.todobackend.config;
 
+import com.example.todobackend.auth.AuthEntryPoint;
 import com.example.todobackend.auth.AuthenticationFilter;
 import com.example.todobackend.auth.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
@@ -17,9 +18,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @EnableMethodSecurity
 @EnableWebSecurity(debug = true)
@@ -27,10 +25,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationFilter authenticationFilter;
+    private final AuthEntryPoint exceptionHandler;
 
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService, AuthenticationFilter authenticationFilter) {
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService, AuthenticationFilter authenticationFilter, AuthEntryPoint exceptionHandler) {
         this.userDetailsService = userDetailsService;
         this.authenticationFilter = authenticationFilter;
+        this.exceptionHandler = exceptionHandler;
     }
 
     public void configureGlobal (AuthenticationManagerBuilder auth)
@@ -61,7 +61,9 @@ public class SecurityConfig {
                         authorizeHttpRequests
                                 .requestMatchers(HttpMethod.POST, "/login").permitAll()
                                 .anyRequest().authenticated())
-                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling((exceptionHandling) ->
+                        exceptionHandling.authenticationEntryPoint(exceptionHandler));
 //        return http
 //                .httpBasic(Customizer.withDefaults())
 //                .csrf(AbstractHttpConfigurer::disable)
