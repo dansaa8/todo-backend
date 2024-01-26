@@ -2,13 +2,13 @@ package com.example.todobackend.task;
 
 import java.time.LocalDateTime;
 
-public record TaskDto(
+public record TaskDTO(
         Long id,
         String name,
         boolean isCompleted,
         LocalDateTime deadline,
         LocalDateTime completedAt) {
-    public TaskDto(Task task) {
+    public TaskDTO(Task task) {
         this(
                 task.getId(),
                 task.getName(),
