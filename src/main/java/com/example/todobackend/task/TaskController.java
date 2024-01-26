@@ -9,7 +9,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("api")
+@RequestMapping("api/tasks")
 @Validated
 public class TaskController {
 
@@ -19,25 +19,25 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @GetMapping("/tasks")
+    @GetMapping("")
     public List<TaskDTO> getAllTasks() throws AccessDeniedException {
         return taskService.getAll();
     }
 
-    @PostMapping("/tasks")
+    @PostMapping("")
     public TaskDTO addTask(@RequestBody @Valid TaskRequestBody requestBody) throws AccessDeniedException {
         return taskService.add(requestBody);
     }
 
-    @DeleteMapping("/tasks/{id}")
+    @DeleteMapping("/{id}")
     public TaskDTO deleteTask(@PathVariable Long id) throws AccessDeniedException {
         return taskService.delete(id);
     }
 
-    @PutMapping("/tasks/{id}")
+    @PutMapping("{id}")
     public TaskDTO updateTask(
             @PathVariable Long id,
             @RequestBody @Valid TaskRequestBody requestBody) throws AccessDeniedException {
-        return taskService.update(id, requestBody); }
-
+        return taskService.update(id, requestBody);
+    }
 }
