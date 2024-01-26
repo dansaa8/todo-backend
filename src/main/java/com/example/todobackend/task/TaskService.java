@@ -30,12 +30,17 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskDTO delete(Long id) throws AccessDeniedException {
+    public TaskDTO delete(Long taskId) throws AccessDeniedException {
         Authentication authorizedUser = getAuthenticatedUserOrThrow();
-        var taskEntity = taskRepository.findById(id).orElseThrow();
-        taskRepository.delete(taskEntity);
-        return new TaskDTO(taskEntity);
 
+        var userEntity = userRepository.findByUsernameIgnoreCase(authorizedUser.getName()).orElseThrow();
+        var taskEntity = taskRepository.findById(taskId).orElseThrow();
+
+        if (taskEntity.getUser().getId().equals(userEntity.getId())) {
+            taskRepository.delete(taskEntity);
+            return new TaskDTO(taskEntity);
+        }
+        throw new AccessDeniedException("");
     }
 
     public TaskDTO add(TaskRequestBody reqBody) throws AccessDeniedException {
