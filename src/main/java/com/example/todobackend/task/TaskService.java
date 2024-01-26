@@ -1,6 +1,9 @@
 package com.example.todobackend.task;
 
 import com.example.todobackend.user.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
+import org.hibernate.annotations.NotFound;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,11 +33,13 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskDTO delete(Long taskId) throws AccessDeniedException {
+    public TaskDTO delete(Long idDelete) throws AccessDeniedException, EntityNotFoundException {
         Authentication authorizedUser = getAuthenticatedUserOrThrow();
 
         var fkUserEntity = userRepository.findByUsernameIgnoreCase(authorizedUser.getName()).orElseThrow();
-        var taskEntity = taskRepository.findById(taskId).orElseThrow();
+
+        var taskEntity = taskRepository.findById(idDelete).orElseThrow(() ->
+                new EntityNotFoundException("Task not found"));
 
         if (taskEntity.getUser().getId().equals(fkUserEntity.getId())) {
             taskRepository.delete(taskEntity);
@@ -59,19 +64,25 @@ public class TaskService {
         return new TaskDTO(taskEntity);
     }
 
-    public TaskDTO update(Long id, TaskRequestBody reqBody) throws AccessDeniedException {
+    public TaskDTO update(Long idUpdate, TaskRequestBody reqBody) throws AccessDeniedException, EntityNotFoundException {
         Authentication authorizedUser = getAuthenticatedUserOrThrow();
-        var userEntity = userRepository.findByUsernameIgnoreCase(
-                reqBody.name())
-                .orElseThrow(() -> new AccessDeniedException(""));
-        var taskEntity = taskRepository.findById(id).orElseThrow();
-        taskEntity.setName(reqBody.name());
-        taskEntity.setCompleted(false);
-        taskEntity.setDeadline(reqBody.deadline());
-        taskEntity.setUser(userEntity); //temporary until auth has been implemented.
-        taskEntity.setCompletedAt(null);
-        taskRepository.save(taskEntity);
-        return new TaskDTO(taskEntity);
 
+        var fkUserEntity = userRepository.findByUsernameIgnoreCase(authorizedUser.getName()).orElseThrow();
+
+
+        var taskEntity = taskRepository.findById(idUpdate).orElseThrow(() ->
+                new EntityNotFoundException("Task not found"));
+
+        if (taskEntity.getUser().getId().equals(fkUserEntity.getId())) {
+            taskEntity.setName(reqBody.name());
+            taskEntity.setCompleted(false);
+            taskEntity.setDeadline(reqBody.deadline());
+            taskEntity.setUser(fkUserEntity); //temporary until auth has been implemented.
+            taskEntity.setCompletedAt(null);
+            taskRepository.save(taskEntity);
+            return new TaskDTO(taskEntity);
+        }
+
+        throw new AccessDeniedException("");
     }
 }
