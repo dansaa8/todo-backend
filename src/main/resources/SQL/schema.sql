@@ -12,9 +12,9 @@ CREATE TABLE IF NOT EXISTS user
 CREATE TABLE IF NOT EXISTS task (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
-    user_id      INT NOT NULL,
+    user     INT NOT NULL,
     is_completed BOOLEAN NOT NULL,
     deadline DATETIME NOT NULL,
     completed_at DATETIME,
-    FOREIGN KEY (user_id) REFERENCES user (id)
+    FOREIGN KEY (user) REFERENCES user (id)
 );
