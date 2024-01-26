@@ -11,8 +11,6 @@ import java.util.Optional;
 @Repository
 public interface TaskRepository extends ListCrudRepository<Task, Long> {
 
-    List<TaskView> findAllBy();
-
-    @Query("SELECT t FROM Task t WHERE t.userId = :id")
-    List<TaskView> findMyTasks(@Param("id") String id);
+    @Query("SELECT t FROM Task t JOIN t.user u WHERE u.username = :username")
+    List<Task> findTasksByUserUsername(String username);
 }
