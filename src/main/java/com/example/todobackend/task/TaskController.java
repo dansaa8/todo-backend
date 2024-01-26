@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:5173")
@@ -18,30 +19,25 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    // Temporary
     @GetMapping("/tasks")
-    public List<TaskView> getAllTasks() {
-        return taskService.getAllTasks();
+    public List<TaskDTO> getAllTasks() throws AccessDeniedException {
+        return taskService.getAll();
     }
 
     @PostMapping("/tasks")
-    public TaskDto addTask(@RequestBody @Valid TaskRequestBody requestBody) {
+    public TaskDTO addTask(@RequestBody @Valid TaskRequestBody requestBody) throws AccessDeniedException {
         return taskService.add(requestBody);
     }
 
     @DeleteMapping("/tasks/{id}")
-    public TaskDto deleteTask(@PathVariable Long id) {
+    public TaskDTO deleteTask(@PathVariable Long id) throws AccessDeniedException {
         return taskService.delete(id);
     }
 
     @PutMapping("/tasks/{id}")
-    public TaskDto updateTask(
+    public TaskDTO updateTask(
             @PathVariable Long id,
-            @RequestBody @Valid TaskRequestBody requestBody) {
+            @RequestBody @Valid TaskRequestBody requestBody) throws AccessDeniedException {
         return taskService.update(id, requestBody); }
 
-//    @GetMapping("/users/{userId}/tasks")
-//    public List<TaskView> getUserTasks(@PathVariable String userId) throws AccessDeniedException {
-//        return taskService.getUserTasks(userId);
-//    }
 }

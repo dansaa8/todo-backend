@@ -1,60 +1,70 @@
 package com.example.todobackend.task;
 
+import com.example.todobackend.user.UserRepository;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
+
+import static com.example.todobackend.task.TaskUtils.getAuthenticatedUserOrThrow;
 
 @Service
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
 
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskRepository taskRepository,
+                       UserRepository userRepository) {
         this.taskRepository = taskRepository;
+        this.userRepository = userRepository;
     }
 
-    public List<TaskView> getAllTasks() {
-        return taskRepository.findAllBy();
+    public List<TaskDTO> getAll() throws AccessDeniedException {
+        Authentication authorizedUser = getAuthenticatedUserOrThrow();
+        return taskRepository.findTasksByUserUsername(authorizedUser.getName()).stream()
+                .map(TaskDTO::new)
+                .toList();
     }
 
     @Transactional
-    public TaskDto delete(Long id) {
+    public TaskDTO delete(Long id) throws AccessDeniedException {
+        Authentication authorizedUser = getAuthenticatedUserOrThrow();
         var taskEntity = taskRepository.findById(id).orElseThrow();
         taskRepository.delete(taskEntity);
-        return new TaskDto(taskEntity);
+        return new TaskDTO(taskEntity);
 
     }
 
-    public TaskDto add(TaskRequestBody reqBody) {
+    public TaskDTO add(TaskRequestBody reqBody) throws AccessDeniedException {
+        Authentication authorizedUser = getAuthenticatedUserOrThrow();
+        var userEntity = userRepository.findByUsernameIgnoreCase(reqBody.name())
+                .orElseThrow(() -> new AccessDeniedException(""));
         var taskEntity = new Task();
         taskEntity.setName(reqBody.name());
         taskEntity.setCompleted(false);
         taskEntity.setDeadline(reqBody.deadline());
-        taskEntity.setUserId(1L); //temporary until auth has been implemented.
+        taskEntity.setUser(userEntity); //temporary until auth has been implemented.
         taskEntity.setCompletedAt(null);
         taskRepository.save(taskEntity);
-        return new TaskDto(taskEntity);
+        return new TaskDTO(taskEntity);
     }
 
-    public TaskDto update(Long id, TaskRequestBody reqBody) {
+    public TaskDTO update(Long id, TaskRequestBody reqBody) throws AccessDeniedException {
+        Authentication authorizedUser = getAuthenticatedUserOrThrow();
+        var userEntity = userRepository.findByUsernameIgnoreCase(
+                reqBody.name())
+                .orElseThrow(() -> new AccessDeniedException(""));
         var taskEntity = taskRepository.findById(id).orElseThrow();
         taskEntity.setName(reqBody.name());
         taskEntity.setCompleted(false);
         taskEntity.setDeadline(reqBody.deadline());
-        taskEntity.setUserId(1L); //temporary until auth has been implemented.
+        taskEntity.setUser(userEntity); //temporary until auth has been implemented.
         taskEntity.setCompletedAt(null);
         taskRepository.save(taskEntity);
-        return new TaskDto(taskEntity);
+        return new TaskDTO(taskEntity);
 
     }
-
-//    public List<TaskView> getUserTasks(String userId) throws AccessDeniedException {
-//        Authentication user = SecurityContextHolder.getContext().getAuthentication();
-//        System.out.println(user.getName().equals(userId));
-//        if (!user.isAuthenticated() || !user.getName().equals(userId)) {
-//            throw new AccessDeniedException("Unauthorized access");
-//        }
-//        return taskRepository.findMyTasks(userId);
-//    }
 }
