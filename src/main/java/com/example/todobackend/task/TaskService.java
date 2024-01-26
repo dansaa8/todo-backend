@@ -33,10 +33,10 @@ public class TaskService {
     public TaskDTO delete(Long taskId) throws AccessDeniedException {
         Authentication authorizedUser = getAuthenticatedUserOrThrow();
 
-        var userEntity = userRepository.findByUsernameIgnoreCase(authorizedUser.getName()).orElseThrow();
+        var fkUserEntity = userRepository.findByUsernameIgnoreCase(authorizedUser.getName()).orElseThrow();
         var taskEntity = taskRepository.findById(taskId).orElseThrow();
 
-        if (taskEntity.getUser().getId().equals(userEntity.getId())) {
+        if (taskEntity.getUser().getId().equals(fkUserEntity.getId())) {
             taskRepository.delete(taskEntity);
             return new TaskDTO(taskEntity);
         }
@@ -45,13 +45,15 @@ public class TaskService {
 
     public TaskDTO add(TaskRequestBody reqBody) throws AccessDeniedException {
         Authentication authorizedUser = getAuthenticatedUserOrThrow();
-        var userEntity = userRepository.findByUsernameIgnoreCase(reqBody.name())
+
+        var fkUserEntity = userRepository.findByUsernameIgnoreCase(authorizedUser.getName())
                 .orElseThrow(() -> new AccessDeniedException(""));
+
         var taskEntity = new Task();
         taskEntity.setName(reqBody.name());
         taskEntity.setCompleted(false);
         taskEntity.setDeadline(reqBody.deadline());
-        taskEntity.setUser(userEntity); //temporary until auth has been implemented.
+        taskEntity.setUser(fkUserEntity); //temporary until auth has been implemented.
         taskEntity.setCompletedAt(null);
         taskRepository.save(taskEntity);
         return new TaskDTO(taskEntity);
