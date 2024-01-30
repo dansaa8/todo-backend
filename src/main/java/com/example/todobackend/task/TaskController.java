@@ -34,7 +34,7 @@ public class TaskController {
         return taskService.delete(id);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public TaskDTO updateTask(
             @PathVariable Long id,
             @RequestBody @Valid TaskRequestBody requestBody) throws AccessDeniedException {
