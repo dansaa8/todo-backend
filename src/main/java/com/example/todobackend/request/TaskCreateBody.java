@@ -1,11 +1,11 @@
-package com.example.todobackend.task;
+package com.example.todobackend.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
-public record TaskRequestBody(
+public record TaskCreateBody(
         @NotNull @NotEmpty String name,
         @NotNull LocalDateTime deadline
 ) {

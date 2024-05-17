@@ -1,5 +1,8 @@
-package com.example.todobackend.task;
+package com.example.todobackend.controller;
 
+import com.example.todobackend.dto.TaskDTO;
+import com.example.todobackend.request.TaskCreateBody;
+import com.example.todobackend.service.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +28,7 @@ public class TaskController {
     }
 
     @PostMapping("")
-    public TaskDTO addTask(@RequestBody @Valid TaskRequestBody requestBody) throws AccessDeniedException {
+    public TaskDTO addTask(@RequestBody @Valid TaskCreateBody requestBody) throws AccessDeniedException {
         return taskService.add(requestBody);
     }
 
@@ -37,7 +40,7 @@ public class TaskController {
     @PutMapping("/{id}")
     public TaskDTO updateTask(
             @PathVariable Long id,
-            @RequestBody @Valid TaskRequestBody requestBody) throws AccessDeniedException {
+            @RequestBody @Valid TaskCreateBody requestBody) throws AccessDeniedException {
         return taskService.update(id, requestBody);
     }
 }

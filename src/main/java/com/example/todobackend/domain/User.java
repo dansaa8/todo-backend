@@ -1,4 +1,4 @@
-package com.example.todobackend.user;
+package com.example.todobackend.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;

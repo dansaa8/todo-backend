@@ -1,7 +1,7 @@
 package com.example.todobackend.auth;
 
-import com.example.todobackend.user.User;
-import com.example.todobackend.user.UserRepository;
+import com.example.todobackend.domain.User;
+import com.example.todobackend.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

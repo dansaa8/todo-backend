@@ -1,10 +1,12 @@
-package com.example.todobackend.task;
+package com.example.todobackend.domain;
 
-import com.example.todobackend.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import com.example.todobackend.domain.User;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -12,26 +14,25 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "task", schema = "todo")
-public class Task {
+public class Task extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(nullable = false)
     private Long id;
 
     @Size(max = 255)
-    @Column(name = "name", nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "isCompleted", nullable = false)
-    private boolean isCompleted = false;
+    @Size(max = 255)
+    private String description;
 
-    @Column(name = "deadline", nullable = false)
+    @Column(nullable = false) // Remove later if save as draft should be possible?
     private LocalDateTime deadline;
 
-    @Column(name = "completed_at")
     private LocalDateTime completedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user", nullable = false)
+    @JoinColumn(nullable = false)
     private User user;
 }

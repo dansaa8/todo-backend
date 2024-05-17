@@ -1,15 +1,16 @@
-package com.example.todobackend.task;
+package com.example.todobackend.service.utils;
 
-import com.example.todobackend.user.User;
-import com.example.todobackend.user.UserRepository;
+import com.example.todobackend.domain.Task;
+import com.example.todobackend.domain.User;
+import com.example.todobackend.repository.TaskRepository;
+import com.example.todobackend.request.TaskCreateBody;
+import com.example.todobackend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.nio.file.AccessDeniedException;
-import java.time.LocalDateTime;
 
 @Component
 public class TaskServiceUtils {
@@ -40,9 +41,8 @@ public class TaskServiceUtils {
                 .orElseThrow(() -> new EntityNotFoundException(""));
     }
 
-    public static void setTaskValues(Task task, User user, TaskRequestBody reqBody) {
+    public static void setTaskValues(Task task, User user, TaskCreateBody reqBody) {
         task.setName(reqBody.name());
-        task.setCompleted(false);
         task.setDeadline(reqBody.deadline());
         task.setUser(user);
         task.setCompletedAt(null);

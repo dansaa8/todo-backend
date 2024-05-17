@@ -1,6 +1,5 @@
 package com.example.todobackend;
 
-import com.example.todobackend.user.UserRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
