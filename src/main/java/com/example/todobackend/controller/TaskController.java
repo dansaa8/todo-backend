@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5173")
+//@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("api/tasks")
 @Validated
@@ -27,8 +27,14 @@ public class TaskController {
         return taskService.getAll();
     }
 
+    @GetMapping("/{id}")
+    public TaskDTO getTaskById(@PathVariable Long id) throws AccessDeniedException {
+        return taskService.getById(id);
+    }
+
     @PostMapping("")
     public TaskDTO addTask(@RequestBody @Valid TaskCreateBody requestBody) throws AccessDeniedException {
+        System.out.println("REQUESTBODY: " + requestBody);
         return taskService.add(requestBody);
     }
 
