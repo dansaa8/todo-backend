@@ -30,13 +30,11 @@ public class TaskService {
                 .toList();
     }
 
-    @Transactional
-    public TaskDTO delete(Long id) throws AccessDeniedException, EntityNotFoundException {
+    public TaskDTO getById(Long id) throws AccessDeniedException {
         Authentication authorizedUser = getAuthenticatedUserOrThrow();
         var user = getUserByUsername(authorizedUser.getName());
         var task = getTaskById(id);
         if (userOwnsTask(user, task)) {
-            taskRepository.delete(task);
             return new TaskDTO(task);
         }
         throw new AccessDeniedException("");
@@ -51,6 +49,19 @@ public class TaskService {
         return new TaskDTO(task);
     }
 
+    @Transactional
+    public TaskDTO delete(Long id) throws AccessDeniedException, EntityNotFoundException {
+        Authentication authorizedUser = getAuthenticatedUserOrThrow();
+        var user = getUserByUsername(authorizedUser.getName());
+        var task = getTaskById(id);
+        if (userOwnsTask(user, task)) {
+            taskRepository.delete(task);
+            return new TaskDTO(task);
+        }
+        throw new AccessDeniedException("");
+    }
+
+
     public TaskDTO update(Long id, TaskCreateBody reqBody) throws AccessDeniedException, EntityNotFoundException {
         Authentication authorizedUser = getAuthenticatedUserOrThrow();
         var user = getUserByUsername(authorizedUser.getName());
@@ -62,4 +73,5 @@ public class TaskService {
         }
         throw new AccessDeniedException("");
     }
+
 }
