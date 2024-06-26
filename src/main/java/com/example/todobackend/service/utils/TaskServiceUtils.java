@@ -3,7 +3,8 @@ package com.example.todobackend.service.utils;
 import com.example.todobackend.domain.Task;
 import com.example.todobackend.domain.User;
 import com.example.todobackend.repository.TaskRepository;
-import com.example.todobackend.request.TaskCreateBody;
+import com.example.todobackend.request.PatchBody;
+import com.example.todobackend.request.CreateBody;
 import com.example.todobackend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.core.Authentication;
@@ -41,11 +42,18 @@ public class TaskServiceUtils {
                 .orElseThrow(() -> new EntityNotFoundException(""));
     }
 
-    public static void setTaskValues(Task task, User user, TaskCreateBody reqBody) {
+    public static void setValuesForNewTask(Task task, User user, CreateBody reqBody) {
         task.setName(reqBody.name());
         task.setDeadline(reqBody.deadline());
         task.setUser(user);
         task.setCompletedAt(null);
+    }
+
+    public static void patchExistingTask(Task task, PatchBody patchBody) {
+        if (patchBody.name() != null) task.setName(patchBody.name());
+        if (patchBody.description() != null) task.setDescription(patchBody.description());
+        if (patchBody.deadline() != null) task.setDeadline(patchBody.deadline());
+        if (patchBody.completedAt() != null) task.setCompletedAt(patchBody.completedAt());
     }
 
     public static boolean userOwnsTask(User userEntity, Task taskEntity) {

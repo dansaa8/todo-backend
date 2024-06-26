@@ -3,7 +3,8 @@ package com.example.todobackend.service;
 import com.example.todobackend.domain.Task;
 import com.example.todobackend.dto.TaskDTO;
 import com.example.todobackend.repository.TaskRepository;
-import com.example.todobackend.request.TaskCreateBody;
+import com.example.todobackend.request.PatchBody;
+import com.example.todobackend.request.CreateBody;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -40,11 +41,12 @@ public class TaskService {
         throw new AccessDeniedException("");
     }
 
-    public TaskDTO add(TaskCreateBody reqBody) throws AccessDeniedException {
+    @Transactional
+    public TaskDTO add(CreateBody reqBody) throws AccessDeniedException {
         Authentication authorizedUser = getAuthenticatedUserOrThrow();
         var user = getUserByUsername(authorizedUser.getName());
         var task = new Task();
-        setTaskValues(task, user, reqBody);
+        setValuesForNewTask(task, user, reqBody);
         taskRepository.save(task);
         return new TaskDTO(task);
     }
@@ -61,13 +63,13 @@ public class TaskService {
         throw new AccessDeniedException("");
     }
 
-
-    public TaskDTO update(Long id, TaskCreateBody reqBody) throws AccessDeniedException, EntityNotFoundException {
+    @Transactional
+    public TaskDTO patch(Long id, PatchBody patchBody) throws AccessDeniedException, EntityNotFoundException {
         Authentication authorizedUser = getAuthenticatedUserOrThrow();
         var user = getUserByUsername(authorizedUser.getName());
         var task = getTaskById(id);
         if (userOwnsTask(user, task)) {
-            setTaskValues(task, user, reqBody);
+            patchExistingTask(task, patchBody);
             taskRepository.save(task);
             return new TaskDTO(task);
         }
