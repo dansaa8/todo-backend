@@ -44,6 +44,7 @@ public class TaskServiceUtils {
 
     public static void setValuesForNewTask(Task task, User user, CreateBody reqBody) {
         task.setName(reqBody.name());
+        task.setDescription(reqBody.description());
         task.setDeadline(reqBody.deadline());
         task.setUser(user);
         task.setCompletedAt(null);
