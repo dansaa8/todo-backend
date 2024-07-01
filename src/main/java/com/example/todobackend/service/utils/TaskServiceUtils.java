@@ -52,9 +52,9 @@ public class TaskServiceUtils {
 
     public static void patchExistingTask(Task task, PatchBody patchBody) {
         if (patchBody.name() != null) task.setName(patchBody.name());
-        if (patchBody.description() != null) task.setDescription(patchBody.description());
+        task.setDescription(patchBody.description());
         if (patchBody.deadline() != null) task.setDeadline(patchBody.deadline());
-        if (patchBody.completedAt() != null) task.setCompletedAt(patchBody.completedAt());
+        task.setCompletedAt(patchBody.completedAt());
     }
 
     public static boolean userOwnsTask(User userEntity, Task taskEntity) {
