@@ -1,10 +1,10 @@
 USE todo;
 
 INSERT INTO user(id, username, password, role)
-VALUES (1, "bertil", "$2a$10$NVM0n8ElaRgg7zWO1CxUdei7vWoPg91Lz2aYavh9.f9q0e4bRadue", "USER");
+VALUES (1, "userOne", "$2a$10$NVM0n8ElaRgg7zWO1CxUdei7vWoPg91Lz2aYavh9.f9q0e4bRadue", "USER");
 
 INSERT INTO user(id, username, password, role)
-VALUES (2, "ingrid", "$2a$10$NVM0n8ElaRgg7zWO1CxUdei7vWoPg91Lz2aYavh9.f9q0e4bRadue", "USER");
+VALUES (2, "userTwo", "$2a$10$NVM0n8ElaRgg7zWO1CxUdei7vWoPg91Lz2aYavh9.f9q0e4bRadue", "USER");
 
 INSERT INTO task(id, name, user, is_completed, deadline, completed_at)
 VALUES (1, 'Buy groceries', 1, false, '2023-02-26 15:30:00', null);
